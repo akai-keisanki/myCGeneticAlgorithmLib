@@ -55,12 +55,12 @@ signed int main(void)
   scanf("%lf", &target);
 
   struct genetic_generator *gen = init_genetic_generator(
-	sizeof(struct solution),
-	generate_random_solution,
-	fit,
-	crossover,
-	POPULATION_SIZE
-      );
+      sizeof(struct solution),
+      generate_random_solution,
+      fit,
+      crossover,
+      POPULATION_SIZE
+    );
   struct solution solution;
 
   run_generations(gen, CUT, CROSSOVER_PER_MILLE, GENERATIONS);
