@@ -44,6 +44,9 @@ This will compile your script and generate an executable binary file named `test
 
 ### Examples
 
+#### 1. Square root
+
+Code:
 ```c
 #include <stddef.h>
 #include <stdlib.h>
@@ -111,4 +114,56 @@ signed int main(void)
 
   return 0;
 }
+```
+
+Execution example:
+```
+==============================
+Genetic Square Root Calculator
+==============================
+
+
+Input number:
+2
+
+0th best solution: 1.4142135624
+0th best fitness: 0
+
+
+1th best solution: 1.4142135624
+1th best fitness: 0
+
+
+2th best solution: 1.4142135624
+2th best fitness: 0
+
+
+3th best solution: 1.4142135624
+3th best fitness: 0
+
+
+4th best solution: 1.4142135624
+4th best fitness: 0
+
+
+5th best solution: 1.4142135624
+5th best fitness: 0
+
+
+6th best solution: 1.4142135624
+6th best fitness: 0
+
+
+7th best solution: 1.4142135624
+7th best fitness: 0
+
+
+8th best solution: 1.4142135624
+8th best fitness: 0
+
+
+9th best solution: 1.4142135624
+9th best fitness: 0
+
+
 ```
