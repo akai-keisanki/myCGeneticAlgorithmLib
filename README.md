@@ -18,7 +18,7 @@ In order to implement your custom solution:
     - The data structure which represents a solution (e.g. `struct solution`);
     - A generator function for a random solution (`void (struct solution *)`);
     - A fitness scorer function for a solution (`signed long int (const struct solution *)`) [^1];
-    - A crossover function to mix 2 solutions (`void (struct solution *, struct solution *, struct solution *)`);
+    - A crossover function to mix 2 solutions (`void (struct solution *, const struct solution *, const struct solution *)`);
     - The size of the population;
 
 - Then use the generator:
@@ -77,7 +77,7 @@ signed long int fit(const struct solution * const solution)
   return -round(fabs(solution->x * solution->x - target) * 10000000000.0);
 }
 
-void crossover(struct solution * const solution, struct solution * const solution_a, struct solution * const solution_b)
+void crossover(struct solution * const solution, const struct solution * const solution_a, const struct solution * const solution_b)
 {
   solution->x = (solution_a->x + solution_b->x) / 2;
 }
