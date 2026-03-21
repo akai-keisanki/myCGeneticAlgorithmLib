@@ -14,4 +14,5 @@ obj/%.o: src/%.c
 	$(CC) -c -o $@ $^
 
 clean:
-	rm -r obj/ test.o test
+	rm -r obj/
+	rm test.o test

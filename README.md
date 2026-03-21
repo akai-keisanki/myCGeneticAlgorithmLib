@@ -1,14 +1,48 @@
 # myCGeneticAlgorithmLib
 
-Trying to make a genetic algorithm library in C
+A simple library for genetic algorithm solutions in C.
 
-# What is a genetic algorithm?
+## Introduction
 
 A genetic algorithm is a heuristic solution to a problem based on the principles of natural selection and genetics.
 
-The goal is to generate and select an optimal solution with specific scoring criteria (fitness), iterating over generations that select the best cut of solutions and replace the rest by other or mixed (crossover) ones.
+The goal is to generate and select an optimal solution with specific scoring criteria (fitness) by iterating over generations that select the best cut of solutions and replace the rest by other or mixed (crossover) ones.
 
-# Examples
+This library provides a concise, generic and straightforward way to implement this process.
+
+## Usage
+
+In order to implement your custom solution:
+
+- You must define:
+    - The data structure which represents a solution (e.g. `struct solution`);
+    - A generator function for a random solution (`void (struct solution *)`);
+    - A fitness scorer function for a solution (`signed long int (const struct solution *)`) [^1];
+    - A crossover function to mix 2 solutions (`void (struct solution *, struct solution *, struct solution *)`);
+    - The size of the population;
+
+- Then use the generator:
+    - Initialize a `struct genetic_generator *` object with `init_genetic_generator(...)` according to the previous definitions (e.g. `struct genetic_generator *gen = init_genetic_generator(sizeof(struct solution), generate_random_solution, fit, crossover, POPULATION_SIZE)`[^2]);
+    - Run generations with `run_generations(...)` (e.g. 200 generations with a cut of the 100 best solutions and 25% of crossover rate: `run_generations(gen, 100, 250, 200)`);
+    - Copy a solution from the population to a solution object with `get_top_solution(...)` (e.g. the top one: `get_top_solution(gen, &solution, 0)`);
+    - Free the generator object with `free_genetic_generator`;
+
+[^1]: Higher fitness scores mean a better solution. Since the algorithm will compare the scores, you might want to have unique scores for every possible solution.
+[^2]: The crossover rate is given per mille (i.e. 0-1000 where 1000 = 100%).
+
+### How to test it
+
+Create a `test.c` file.
+You can write your own code or use one of the examples at the end of this file.
+
+Run:
+```sh
+make test
+```
+
+This will compile your script and generate an executable binary file named `test` with the library linked.
+
+### Examples
 
 ```c
 #include <stddef.h>
@@ -69,7 +103,7 @@ signed int main(void)
   {
     get_top_solution(gen, &solution, i);
 
-    printf("\n%lluth best solution: %.10lf\n", i, solution.x);
+    printf("\n%luth best solution: %.10lf\n", i, solution.x);
     printf("%luth best fitness: %li\n\n", i, fit(&solution));
   }
 
@@ -78,15 +112,3 @@ signed int main(void)
   return 0;
 }
 ```
-
-# How to test it
-
-Create a `test.c` file.
-You can write your own code or use one of the examples.
-
-Run:
-```sh
-make test
-```
-
-There must be an executable `test` file with the library linked.
