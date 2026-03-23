@@ -35,12 +35,12 @@ In order to implement your custom solution:
 Create a `test.c` file.
 You can write your own code or use one of the examples at the end of this file.
 
-Run:
+To run your test:
 ```sh
-make test
+make run_test
 ```
 
-This will compile your script and generate an executable binary file named `test` with the library linked.
+This will compile your script and generate an executable binary file named `test` with the library linked and run it.
 
 ### Examples
 
