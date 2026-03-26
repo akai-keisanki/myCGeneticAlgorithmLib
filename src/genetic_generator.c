@@ -52,6 +52,7 @@ struct genetic_generator *copy_genetic_generator(const struct genetic_generator 
 
   copy->population = malloc(self->solution_size * self->population_size);
   memcpy(copy->population, self->population, self->solution_size * self->population_size);
+
   copy->fits = malloc(sizeof(signed long int) * self->population_size);
   memcpy(copy->fits, self->fits, sizeof(signed long int) * self->population_size);
 
@@ -73,6 +74,27 @@ void set_fit(struct genetic_generator * const self, signed long int (* const fit
 void set_crossover(struct genetic_generator * const self, void (* const crossover)(void *solution, const void *solution_a, const void *solution_b))
 {
   self->crossover = crossover;
+}
+
+void set_population_size(struct genetic_generator *self, size_t population_size)
+{
+  void *population = self->population;
+  signed long int *fits = self->fits;
+
+  self->population_size ^= population_size;
+  population_size ^= self->population_size;
+  self->population_size ^= population_size;
+
+  self->population = malloc(self->solution_size * self->population_size);
+  memcpy(self->population, population, self->solution_size * population_size);
+
+  self->fits = malloc(sizeof(signed long int) * self->population_size);
+  memcpy(self->fits, fits, sizeof(signed long int) * population_size);
+
+  run_generation(self, population_size, 0);
+
+  free(population);
+  free(fits);
 }
 
 void sort_population_step(struct genetic_generator * const self, const size_t left, const size_t right)
@@ -138,15 +160,18 @@ void sort_population(struct genetic_generator * const self)
 
 void run_generation(struct genetic_generator * const self, size_t cut, const unsigned short int crossover_per_mille)
 {
-  if (cut > self->population_size) cut = self->population_size;
+  if (cut > self->population_size) return;
+
   for (size_t i = cut; i < self->population_size; ++i)
   {
     if (cut > 0 && rand() % 1000 < crossover_per_mille)
       self->crossover((char*)self->population + i * self->solution_size, (char*)self->population + rand() % cut * self->solution_size, (char*)self->population + rand() % cut * self->solution_size);
     else
       self->generate_random_solution((char*)self->population + i * self->solution_size);
+
     self->fits[i] = self->fit((char*)self->population + i * self->solution_size);
   }
+
   sort_population(self);
 }
 

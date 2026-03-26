@@ -20,6 +20,8 @@ void free_genetic_generator(struct genetic_generator *self);
 void set_fit(struct genetic_generator *self, signed long int (*fit)(const void *solution));
 void set_crossover(struct genetic_generator *self, void (*crossover)(void *solution, const void *solution_a, const void *solution_b));
 
+void set_population_size(struct genetic_generator *self, size_t population_size);
+
 void run_generations(struct genetic_generator *self, size_t cut, unsigned short int crossover_per_mille, size_t generations);
 
 void get_top_solution(const struct genetic_generator *self, void *solution, size_t idx);
