@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void sort_population(struct genetic_generator *self);
-void run_generation(struct genetic_generator *self, size_t cut, unsigned short int crossover_per_mille);
+void gg_sort_population(struct genetic_generator *self);
+void gg_run_generation(struct genetic_generator *self, size_t cut, unsigned short int crossover_per_mille);
 
 struct genetic_generator
 {
@@ -35,7 +35,7 @@ struct genetic_generator *init_genetic_generator(
 
   self->population = malloc(self->solution_size * self->population_size);
   self->fits = malloc(sizeof(signed long int) * self->population_size);
-  run_generation(self, 0, 0);
+  gg_run_generation(self, 0, 0);
 
   return self;
 }
@@ -66,17 +66,17 @@ void free_genetic_generator(struct genetic_generator *self)
   free(self);
 }
 
-void set_fit(struct genetic_generator * const self, signed long int (* const fit)(const void *solution))
+void gg_set_fit(struct genetic_generator * const self, signed long int (* const fit)(const void *solution))
 {
   self->fit = fit;
 }
 
-void set_crossover(struct genetic_generator * const self, void (* const crossover)(void *solution, const void *solution_a, const void *solution_b))
+void gg_set_crossover(struct genetic_generator * const self, void (* const crossover)(void *solution, const void *solution_a, const void *solution_b))
 {
   self->crossover = crossover;
 }
 
-void set_population_size(struct genetic_generator *self, size_t population_size)
+void gg_set_population_size(struct genetic_generator *self, size_t population_size)
 {
   void *population = self->population;
   signed long int *fits = self->fits;
@@ -91,19 +91,19 @@ void set_population_size(struct genetic_generator *self, size_t population_size)
   self->fits = malloc(sizeof(signed long int) * self->population_size);
   memcpy(self->fits, fits, sizeof(signed long int) * population_size);
 
-  run_generation(self, population_size, 0);
+  gg_run_generation(self, population_size, 0);
 
   free(population);
   free(fits);
 }
 
-void sort_population_step(struct genetic_generator * const self, const size_t left, const size_t right)
+void gg_sort_population_step(struct genetic_generator * const self, const size_t left, const size_t right)
 {
   if (right - left <= 1) return;
 
   size_t middle = (left + right) / 2;
-  sort_population_step(self, left, middle);
-  sort_population_step(self, middle, right);
+  gg_sort_population_step(self, left, middle);
+  gg_sort_population_step(self, middle, right);
 
   char *pop_copy = malloc(self->solution_size * (right - left));
   signed long int *fits_copy = malloc(sizeof(signed long int) * (right - left));
@@ -153,12 +153,12 @@ void sort_population_step(struct genetic_generator * const self, const size_t le
   free(fits_copy);
 }
 
-void sort_population(struct genetic_generator * const self)
+void gg_sort_population(struct genetic_generator * const self)
 {
-  sort_population_step(self, 0, self->population_size);
+  gg_sort_population_step(self, 0, self->population_size);
 }
 
-void run_generation(struct genetic_generator * const self, size_t cut, const unsigned short int crossover_per_mille)
+void gg_run_generation(struct genetic_generator * const self, size_t cut, const unsigned short int crossover_per_mille)
 {
   if (cut > self->population_size) return;
 
@@ -172,17 +172,23 @@ void run_generation(struct genetic_generator * const self, size_t cut, const uns
     self->fits[i] = self->fit((char*)self->population + i * self->solution_size);
   }
 
-  sort_population(self);
+  gg_sort_population(self);
 }
 
-void run_generations(struct genetic_generator * const self, const size_t cut, const unsigned short int crossover_per_mille, size_t generations)
+void gg_run_generations(struct genetic_generator * const self, const size_t cut, const unsigned short int crossover_per_mille, size_t generations)
 {
   for (size_t i = 0; i < generations; ++i)
-    run_generation(self, cut, crossover_per_mille);
+    gg_run_generation(self, cut, crossover_per_mille);
 }
 
-void get_top_solution(const struct genetic_generator * const self, void * const solution, size_t idx)
+void gg_get_top_solution(const struct genetic_generator * const self, void * const solution, size_t idx)
 {
   if (idx >= self->population_size) idx = self->population_size - 1;
   memcpy(solution, (char*)self->population + idx * self->solution_size, self->solution_size);
+}
+
+signed long int gg_get_top_fit(const struct genetic_generator * const self, size_t idx)
+{
+  if (idx >= self->population_size) idx = self->population_size - 1;
+  return self->fits[idx];
 }

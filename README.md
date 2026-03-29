@@ -100,14 +100,14 @@ signed int main(void)
     );
   struct solution solution;
 
-  run_generations(gen, CUT, CROSSOVER_PER_MILLE, GENERATIONS);
+  gg_run_generations(gen, CUT, CROSSOVER_PER_MILLE, GENERATIONS);
 
   for (size_t i = 0; i < 10; ++i)
   {
-    get_top_solution(gen, &solution, i);
+    gg_get_top_solution(gen, &solution, i);
 
     printf("\n%luth best solution: %.10lf\n", i, solution.x);
-    printf("%luth best fitness: %li\n\n", i, fit(&solution));
+    printf("%luth best fitness: %li\n", i, fit(&solution));
   }
 
   free_genetic_generator(gen);
@@ -129,41 +129,141 @@ Input number:
 0th best solution: 1.4142135624
 0th best fitness: 0
 
-
 1th best solution: 1.4142135624
 1th best fitness: 0
-
 
 2th best solution: 1.4142135624
 2th best fitness: 0
 
-
 3th best solution: 1.4142135624
 3th best fitness: 0
-
 
 4th best solution: 1.4142135624
 4th best fitness: 0
 
-
 5th best solution: 1.4142135624
 5th best fitness: 0
-
 
 6th best solution: 1.4142135624
 6th best fitness: 0
 
-
 7th best solution: 1.4142135624
 7th best fitness: 0
-
 
 8th best solution: 1.4142135624
 8th best fitness: 0
 
-
 9th best solution: 1.4142135624
 9th best fitness: 0
 
+```
+
+#### 1. Square root with `gg_auto`
+
+Code:
+```c
+#include <stddef.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+#include <stdio.h>
+
+#include "include/gg_tricks.h"
+
+const size_t GENERATIONS = 0x20;
+double target = 0.0;
+
+struct solution
+{
+  double x;
+};
+
+void generate_random_solution(struct solution * const solution)
+{
+  solution->x = rand() % 2000000000 / 10000000.0 - 100.0;
+}
+
+signed long int fit(const struct solution * const solution)
+{
+  return -round(fabs(solution->x * solution->x - target) * 10000000000.0);
+}
+
+void crossover(struct solution * const solution, const struct solution * const solution_a, const struct solution * const solution_b)
+{
+  solution->x = (solution_a->x + solution_b->x) / 2;
+}
+
+signed int main(void)
+{
+  srand(time(0));
+
+  puts("==============================\nGenetic Square Root Calculator\n==============================\n\n");
+  puts("Input number: ");
+  
+  scanf("%lf", &target);
+
+  struct gg_auto *gen = init_gg_auto(
+      sizeof(struct solution),
+      generate_random_solution,
+      fit,
+      crossover
+    );
+  struct solution solution;
+
+  gga_run_generations(gen, GENERATIONS);
+
+  for (size_t i = 0; i < 10; ++i)
+  {
+    gga_get_top_solution(gen, &solution, i);
+
+    printf("\n%luth best solution: %.10lf\n", i, solution.x);
+    printf("%luth best fitness: %li\n", i, fit(&solution));
+  }
+
+  free_gg_auto(gen);
+
+  return 0;
+}
+```
+
+Execution example:
+```
+==============================
+Genetic Square Root Calculator
+==============================
+
+
+Input number:
+2
+
+0th best solution: -1.4142135624
+0th best fitness: 0
+
+1th best solution: -1.4142135624
+1th best fitness: 0
+
+2th best solution: -1.4142135623
+2th best fitness: -1
+
+3th best solution: -1.4142135623
+3th best fitness: -1
+
+4th best solution: -1.4142135624
+4th best fitness: -1
+
+5th best solution: -1.4142135624
+5th best fitness: -1
+
+6th best solution: -1.4142135624
+6th best fitness: -1
+
+7th best solution: -1.4142135624
+7th best fitness: -1
+
+8th best solution: -1.4142135624
+8th best fitness: -2
+
+9th best solution: -1.4142135623
+9th best fitness: -2
 
 ```
