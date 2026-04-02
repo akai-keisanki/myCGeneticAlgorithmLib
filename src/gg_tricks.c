@@ -102,3 +102,26 @@ void gga_get_top_solution(const struct gg_auto *self, void *solution, size_t idx
 {
   gg_get_top_solution(self->gg, solution, idx);
 }
+
+void get_automatic_genetic_solution(
+    size_t solution_size,
+    void (*generate_random_solution)(void *solution),
+    signed long int (*fit)(const void *solution),
+    void (*crossover)(void *solution, const void *solution_a, const void *solution_b),
+    size_t generations,
+    void *solution
+  )
+{
+  struct gg_auto *gen = init_gg_auto(
+      solution_size,
+      generate_random_solution,
+      fit,
+      crossover
+    );
+
+  gga_run_generations(gen, generations);
+
+  gga_get_top_solution(gen, solution, 0);
+
+  free_gg_auto(gen);
+}

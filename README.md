@@ -267,3 +267,79 @@ Input number:
 9th best fitness: -2
 
 ```
+
+#### 1. Square root with `get_automatic_genetic_solution`
+
+Code:
+```c
+#include <stddef.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+#include <stdio.h>
+
+#include "include/gg_tricks.h"
+
+const size_t GENERATIONS = 0x20;
+double target = 0.0;
+
+struct solution
+{
+  double x;
+};
+
+void generate_random_solution(struct solution * const solution)
+{
+  solution->x = rand() % 2000000000 / 10000000.0 - 100.0;
+}
+
+signed long int fit(const struct solution * const solution)
+{
+  return -round(fabs(solution->x * solution->x - target) * 10000000000.0);
+}
+
+void crossover(struct solution * const solution, const struct solution * const solution_a, const struct solution * const solution_b)
+{
+  solution->x = (solution_a->x + solution_b->x) / 2;
+}
+
+signed int main(void)
+{
+  srand(time(0));
+
+  puts("==============================\nGenetic Square Root Calculator\n==============================\n\n");
+  puts("Input number: ");
+  
+  scanf("%lf", &target);
+  
+  struct solution solution;
+
+  get_automatic_genetic_solution(
+      sizeof(struct solution),
+      generate_random_solution,
+      fit,
+      crossover,
+      GENERATIONS,
+      &solution
+    );
+
+  printf("\nBest solution: %.10lf\n", solution.x);
+  printf("Best fitness: %li\n", fit(&solution));
+
+  return 0;
+}
+```
+
+Execution example:
+```
+==============================
+Genetic Square Root Calculator
+==============================
+
+
+Input number:
+2
+
+Best solution: -1.4142135624
+Best fitness: 0
+```
