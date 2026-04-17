@@ -10,17 +10,17 @@ A simple library for genetic algorithm solutions in C.
 
 ## Introduction
 
-A genetic algorithm is a heuristic solution to a problem based on the principles of natural selection and genetics.
+A genetic algorithm is a heuristic method to solve a problem based on the principles of natural selection and genetics.
 
-The goal is to generate and select an optimal solution with specific scoring criteria (fitness) by iterating over generations that select the best cut of solutions and replace the rest by other or mixed (crossover) ones.
+The goal is to generate and select an optimal solution with specific scoring criteria (fitness) by iterating over generations that select the best cut of solutions and replace the rest by new or mixed (crossover) ones.
 
 This library provides a concise, generic and straightforward way to implement this process.
 
 ## Features
 
 - Abstracted setup for genetic solutions;
-- Custom solution data `struct` generation with custom random solution generation, fitness and crossover functions;
-- Facilitated generation with `gg_tricks` (automatic parameters and shortcuts);
+- Custom solution data structures and custom random solution generation, fitness and crossover functions;
+- Simplified usage with `gg_tricks` (automatic parameters and shortcuts);
 
 ## Usage
 
@@ -30,38 +30,38 @@ In order to implement your custom solution:
     - The data structure which represents a solution (e.g. `struct solution`);
     - A generator function for a random solution (`void (struct solution *)`);
     - A fitness scorer function for a solution (`signed long int (const struct solution *)`) [^1];
-    - A crossover function to mix 2 solutions (`void (struct solution *, const struct solution *, const struct solution *)`);
+    - A crossover function to combine 2 solutions (`void (struct solution *, const struct solution *, const struct solution *)`);
     - The size of the population;
 
-- Then use the generator:
+- Then use a generator:
     - Initialize a `struct genetic_generator *` object with `init_genetic_generator(...)` according to the previous definitions (e.g. `struct genetic_generator *gen = init_genetic_generator(sizeof(struct solution), generate_random_solution, fit, crossover, POPULATION_SIZE)`[^2]);
-    - Run generations with `run_generations(...)` (e.g. 200 generations with a cut of the 100 best solutions and 25% of crossover rate: `run_generations(gen, 100, 250, 200)`);
-    - Copy a solution from the population to a solution object with `get_top_solution(...)` (e.g. the top one: `get_top_solution(gen, &solution, 0)`);
+    - Run generations with `gg_run_generations(...)` (e.g. 200 generations with a cut of the 100 best solutions and 25% of crossover rate: `gg_run_generations(gen, 100, 250, 200)`);
+    - Copy a solution from the population into a solution object with `gg_get_top_solution(...)` (e.g. the top one: `gg_get_top_solution(gen, &solution, 0)`);
     - Free the generator object with `free_genetic_generator`;
 
-[^1]: Higher fitness scores mean a better solution. Since the algorithm will compare the scores, you might want to have unique scores for every possible solution.
+[^1]: Higher fitness scores mean a better solution. Since the algorithm will compare the scores, you might prefer scores to be unique for every possible solution.
 [^2]: The crossover rate is given per mille (i.e. 0-1000 where 1000 = 100%).
 
 ### How to test it
 
 Create a `test.c` file.
-You can write your own code or use one of the examples at the end of this file.
+You can write your own code or use one of the examples below.
 
 To run your test:
 ```sh
 make run_test
 ```
 
-This will compile your script and generate an executable binary file named `test` with the library linked and run it.
+This will compile your program and generate an executable binary file named `test` with the library linked and run it.
 
 ### How to link it
 
-To compile the shared library, you must run:
+To build the shared library, you must run:
 ```sh
 make libmycgen.so
 ```
 
-And so you can link it to your program with some GCC flags:
+And so you can link it to your program object files by adding some GCC flags:
 ```sh
 gcc ... -L. -lmycgen
 ```
@@ -182,7 +182,7 @@ Input number:
 
 ```
 
-#### 1. Square root with `gg_auto`
+#### 2. Square root with `gg_auto`
 
 Code:
 ```c
@@ -292,7 +292,7 @@ Input number:
 
 ```
 
-#### 1. Square root with `get_automatic_genetic_solution`
+#### 3. Square root with `get_automatic_genetic_solution`
 
 Code:
 ```c
