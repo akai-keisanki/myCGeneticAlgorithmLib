@@ -16,6 +16,12 @@ The goal is to generate and select an optimal solution with specific scoring cri
 
 This library provides a concise, generic and straightforward way to implement this process.
 
+## Features
+
+- Abstracted setup for genetic solutions;
+- Custom solution data `struct` generation with custom random solution generation, fitness and crossover functions;
+- Facilitated generation with `gg_tricks` (automatic parameters and shortcuts);
+
 ## Usage
 
 In order to implement your custom solution:
@@ -47,6 +53,18 @@ make run_test
 ```
 
 This will compile your script and generate an executable binary file named `test` with the library linked and run it.
+
+### How to link it
+
+To compile the shared library, you must run:
+```sh
+make libmycgen.so
+```
+
+And so you can link it to your program with some GCC flags:
+```sh
+gcc ... -L. -lmycgen
+```
 
 ### Examples
 
