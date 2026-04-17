@@ -1,4 +1,10 @@
 # myCGeneticAlgorithmLib
+![created at](https://img.shields.io/github/created-at/akai-keisanki/myCGeneticAlgorithmLib)
+![license](https://img.shields.io/github/license/akai-keisanki/myCGeneticAlgorithmLib)
+![release](https://img.shields.io/github/v/release/akai-keisanki/myCGeneticAlgorithmLib)
+![top language](https://img.shields.io/github/languages/top/akai-keisanki/myCGeneticAlgorithmLib)
+![forks](https://img.shields.io/github/forks/akai-keisanki/myCGeneticAlgorithmLib)
+![stars](https://img.shields.io/github/stars/akai-keisanki/myCGeneticAlgorithmLib)
 
 A simple library for genetic algorithm solutions in C.
 
