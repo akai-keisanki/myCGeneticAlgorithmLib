@@ -1,7 +1,7 @@
 #ifndef LIBMYCGEN_GG_TRICKS_H
 #define LIBMYCGEN_GG_TRICKS_H
 
-#include "genetic_generator.h"
+#include <mygen/genetic_generator.h>
 
 struct gg_auto;
 

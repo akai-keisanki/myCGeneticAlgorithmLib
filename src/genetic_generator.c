@@ -1,4 +1,4 @@
-#include "../include/genetic_generator.h"
+#include <mygen/genetic_generator.h>
 
 #include <stdlib.h>
 #include <string.h>

@@ -1,4 +1,4 @@
-#include "../include/gg_tricks.h"
+#include <mygen/gg_tricks.h>
 
 #include <stdlib.h>
 #include <math.h>

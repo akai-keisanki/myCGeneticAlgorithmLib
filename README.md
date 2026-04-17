@@ -34,6 +34,7 @@ In order to implement your custom solution:
     - The size of the population;
 
 - Then use a generator:
+    - Include `<mygen/genetic_generator.h>`;
     - Initialize a `struct genetic_generator *` object with `init_genetic_generator(...)` according to the previous definitions (e.g. `struct genetic_generator *gen = init_genetic_generator(sizeof(struct solution), generate_random_solution, fit, crossover, POPULATION_SIZE)`[^2]);
     - Run generations with `gg_run_generations(...)` (e.g. 200 generations with a cut of the 100 best solutions and 25% of crossover rate: `gg_run_generations(gen, 100, 250, 200)`);
     - Copy a solution from the population into a solution object with `gg_get_top_solution(...)` (e.g. the top one: `gg_get_top_solution(gen, &solution, 0)`);
@@ -61,10 +62,21 @@ To build the shared library, you must run:
 make libmycgen.so
 ```
 
-And so you can link it to your program object files by adding some GCC flags:
+If you are using GCC, some flags are needed to ensure the right includes and the link:
+
+When compiling your program, add the include directory:
 ```sh
-gcc ... -L. -lmycgen
+gcc ... -Ipath/to/this/repo/include
 ```
+[^3]
+
+And so you can link it to your program object files:
+```sh
+gcc ... -Lpath/to/this/repo/ -lmycgen
+```
+[^3]
+
+[^3]: Replace `path/to/this/repo/` to the path of this repository or a direcroty with an `include` directory with the headers of this library and the `libmycgen.so` file (e.g. `.` if the working directory is this repository).
 
 ### Examples
 
@@ -78,7 +90,7 @@ Code:
 #include <math.h>
 #include <stdio.h>
 
-#include "include/genetic_generator.h"
+#include <mygen/genetic_generator.h>
 
 const size_t POPULATION_SIZE = 0x100;
 const size_t CUT = 0x20;
@@ -91,18 +103,26 @@ struct solution
   double x;
 };
 
-void generate_random_solution(struct solution * const solution)
+void generate_random_solution(void *const solution_ptr)
 {
+  struct solution *const solution = solution_ptr;
+
   solution->x = rand() % 2000000000 / 10000000.0 - 100.0;
 }
 
-signed long int fit(const struct solution * const solution)
+signed long int fit(const void *const solution_ptr)
 {
+  const struct solution *const solution = solution_ptr;
+
   return -round(fabs(solution->x * solution->x - target) * 10000000000.0);
 }
 
-void crossover(struct solution * const solution, const struct solution * const solution_a, const struct solution * const solution_b)
+void crossover(void *const solution_ptr, const void *const solution_a_ptr, const void *const solution_b_ptr)
 {
+  struct solution *const solution = solution_ptr;
+  const struct solution *const solution_a = solution_a_ptr;
+  const struct solution *const solution_b = solution_b_ptr;
+
   solution->x = (solution_a->x + solution_b->x) / 2;
 }
 
@@ -192,7 +212,7 @@ Code:
 #include <math.h>
 #include <stdio.h>
 
-#include "include/gg_tricks.h"
+#include <mygen/gg_tricks.h>
 
 const size_t GENERATIONS = 0x20;
 double target = 0.0;
@@ -202,18 +222,26 @@ struct solution
   double x;
 };
 
-void generate_random_solution(struct solution * const solution)
+void generate_random_solution(void *const solution_ptr)
 {
+  struct solution *const solution = solution_ptr;
+
   solution->x = rand() % 2000000000 / 10000000.0 - 100.0;
 }
 
-signed long int fit(const struct solution * const solution)
+signed long int fit(const void *const solution_ptr)
 {
+  const struct solution *const solution = solution_ptr;
+
   return -round(fabs(solution->x * solution->x - target) * 10000000000.0);
 }
 
-void crossover(struct solution * const solution, const struct solution * const solution_a, const struct solution * const solution_b)
+void crossover(void *const solution_ptr, const void *const solution_a_ptr, const void *const solution_b_ptr)
 {
+  struct solution *const solution = solution_ptr;
+  const struct solution *const solution_a = solution_a_ptr;
+  const struct solution *const solution_b = solution_b_ptr;
+
   solution->x = (solution_a->x + solution_b->x) / 2;
 }
 
@@ -302,7 +330,7 @@ Code:
 #include <math.h>
 #include <stdio.h>
 
-#include "include/gg_tricks.h"
+#include <mygen/gg_tricks.h>
 
 const size_t GENERATIONS = 0x20;
 double target = 0.0;
@@ -312,18 +340,26 @@ struct solution
   double x;
 };
 
-void generate_random_solution(struct solution * const solution)
+void generate_random_solution(void *const solution_ptr)
 {
+  struct solution *const solution = solution_ptr;
+
   solution->x = rand() % 2000000000 / 10000000.0 - 100.0;
 }
 
-signed long int fit(const struct solution * const solution)
+signed long int fit(const void *const solution_ptr)
 {
+  const struct solution *const solution = solution_ptr;
+
   return -round(fabs(solution->x * solution->x - target) * 10000000000.0);
 }
 
-void crossover(struct solution * const solution, const struct solution * const solution_a, const struct solution * const solution_b)
+void crossover(void *const solution_ptr, const void *const solution_a_ptr, const void *const solution_b_ptr)
 {
+  struct solution *const solution = solution_ptr;
+  const struct solution *const solution_a = solution_a_ptr;
+  const struct solution *const solution_b = solution_b_ptr;
+
   solution->x = (solution_a->x + solution_b->x) / 2;
 }
 
