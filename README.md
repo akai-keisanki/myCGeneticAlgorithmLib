@@ -1,4 +1,4 @@
-# myCGeneticAlgorithmLib
+# ![`libmycgen` logo](img/mycgenlib-icon.png) myCGeneticAlgorithmLib
 ![created at](https://img.shields.io/github/created-at/akai-keisanki/myCGeneticAlgorithmLib)
 ![license](https://img.shields.io/github/license/akai-keisanki/myCGeneticAlgorithmLib)
 ![release](https://img.shields.io/github/v/release/akai-keisanki/myCGeneticAlgorithmLib)
